@@ -55,7 +55,7 @@
       # as an example.
 
       pythonDeps = pkgs: ps: [
-        (overriddenStreamlit { inherit pkgs; sl = ps.streamlit; })
+        #(overriddenStreamlit { inherit pkgs; sl = ps.streamlit; })
         ps.uvicorn
         ps.python-lsp-server
         ps.pandas
@@ -90,6 +90,8 @@
           # CA certificates to access HTTPS sites.
           pkgs.cacert
           pkgs.dockerTools.caCertificates
+          # Docker tools.
+          pkgs.crane
           # Nix
           pkgs.nix
           (dockerUser pkgs)

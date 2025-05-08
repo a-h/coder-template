@@ -27,3 +27,11 @@ interactive: true
 ```bash
 docker run -it --rm ghcr.io/a-h/coder-template:latest
 ```
+
+### docker-publish
+
+```bash
+cp "$(readlink -f result)" ./result.tar.gz
+gunzip result.tar.gz
+crane push result.tar ghcr.io/a-h/coder-template:latest
+```
