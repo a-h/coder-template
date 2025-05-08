@@ -32,6 +32,12 @@ docker run -it --rm ghcr.io/a-h/coder-template:latest
 
 ```bash
 cp "$(readlink -f result)" ./result.tar.gz
-gunzip result.tar.gz
+gunzip -f result.tar.gz
 crane push result.tar ghcr.io/a-h/coder-template:latest
+```
+
+### archive
+
+```bash
+git archive --format=tar --output=template.tar HEAD
 ```

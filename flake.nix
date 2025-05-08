@@ -77,6 +77,11 @@
         echo "coder:!:1::::::" > $out/etc/shadow
       '';
 
+      tmpDir = pkgs: pkgs.runCommand "tmp-dir" { } ''
+        mkdir -p $out/tmp
+        chmod 1777 $out/tmp
+      '';
+
       # Code image is based on https://github.com/coder/images/blob/main/images/base/ubuntu.Dockerfile
       dockerImage = { name, system, pkgs, python }: pkgs.dockerTools.buildImage {
         name = name;
@@ -94,7 +99,10 @@
           pkgs.crane
           # Nix
           pkgs.nix
+          # VS Code remote server.
+          pkgs.code-server
           (dockerUser pkgs)
+          (tmpDir pkgs)
           (devTools pkgs)
           (python.withPackages (pythonDeps pkgs))
         ];
