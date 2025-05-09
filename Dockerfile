@@ -1,5 +1,11 @@
 FROM codercom/enterprise-base:ubuntu
 
+# Remove the LC_ALL environment variable.
+USER root
+ENV LANG=en_US.UTF-8
+RUN echo "unset LC_ALL" >> /etc/profile.d/unset-locale.sh
+USER coder
+
 # Install Nix.
 USER root
 RUN apt update \
@@ -23,4 +29,4 @@ RUN cd /home/coder/tools && nix profile install .#default
 
 # Backup the contents of the default profile into another directory.
 RUN sudo cp -r /home/coder /home/coder-home \
-    && sudo chown -R coder:coder /home/coder-home \
+    && sudo chown -R coder:coder /home/coder-home

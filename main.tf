@@ -108,13 +108,16 @@ resource "coder_agent" "main" {
   arch           = "amd64"
   startup_script = <<-EOT
     set -e
+    echo "Startup script started."
 
-    # Restore the home directory base contents.
-    cp -r /home/coder-home/. /home/coder
+    echo "Restoring home directory contents..."
+    rsync --archive --omit-dir-times --no-perms --no-owner --no-group --ignore-errors /home/coder-home/ /home/coder/
 
+    echo "Starting code-server..."
     # code-server is installed in the Docker container by the Nix flake.
-    # Run it in the background.
     code-server --auth none --port 13337 >/tmp/code-server.log 2>&1 &
+
+    echo "Startup script complete."
   EOT
 
   # The following metadata blocks are optional. They are used to display
