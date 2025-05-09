@@ -109,6 +109,9 @@ resource "coder_agent" "main" {
   startup_script = <<-EOT
     set -e
 
+    # Restore the home directory base contents.
+    cp -r /home/coder-home/. /home/coder
+
     # code-server is installed in the Docker container by the Nix flake.
     # Run it in the background.
     code-server --auth none --port 13337 >/tmp/code-server.log 2>&1 &
@@ -281,9 +284,10 @@ resource "kubernetes_deployment" "main" {
 
         container {
           name              = "dev"
-          image             = "ghcr.io/a-h/coder-template:latest"
-          image_pull_policy = "Always"
-          command           = ["sh", "-c", coder_agent.main.init_script]
+          image             = "ghcr.io/a-h/coder-template:0.0.5"
+          #TODO: Put this back to always at deployment.
+          image_pull_policy = "IfNotPresent"
+          command           = ["/bin/bash", "-c", coder_agent.main.init_script]
           security_context {
             run_as_user = "1000"
           }
@@ -297,7 +301,7 @@ resource "kubernetes_deployment" "main" {
               "memory" = "512Mi"
             }
             limits = {
-              "cpu"    = "${data.coder_parameter.cpu.value}"
+              "cpu"    = data.coder_parameter.cpu.value
               "memory" = "${data.coder_parameter.memory.value}Gi"
             }
           }

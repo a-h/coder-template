@@ -1,0 +1,26 @@
+FROM codercom/enterprise-base:ubuntu
+
+# Install Nix.
+USER root
+RUN apt update \
+    && apt install -y curl xz-utils \
+    && mkdir /nix \
+    && chown coder /nix \
+    && apt clean
+USER coder
+ENV PATH="/home/coder/.nix-profile/bin:${PATH}"
+RUN curl -sL https://nixos.org/nix/install | sh -s -- --no-daemon
+
+# Enable Flakes.
+RUN mkdir -p /home/coder/.config/nix \
+    && echo "experimental-features = nix-command flakes" >> /home/coder/.config/nix/nix.conf
+
+# Copy the ./tools Nix configuration into the container.
+COPY --chown=coder:coder ./tools /home/coder/tools
+
+# Install the tools into the default profile.
+RUN cd /home/coder/tools && nix profile install .#default
+
+# Backup the contents of the default profile into another directory.
+RUN sudo cp -r /home/coder /home/coder-home \
+    && sudo chown -R coder:coder /home/coder-home \
