@@ -30,3 +30,9 @@ RUN cd /home/coder/tools && nix profile install .#default
 # Backup the contents of the default profile into another directory.
 RUN sudo cp -r /home/coder /home/coder-home \
     && sudo chown -R coder:coder /home/coder-home
+
+# Copy the VSIX extensions into the container.
+USER root
+RUN mkdir -p /vsix
+COPY --chown=coder:coder ./vsix /vsix
+USER coder

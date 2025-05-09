@@ -51,6 +51,7 @@
         pkgs.git
         # Development tools.
         pkgs.code-server
+        pkgs.direnv # Required by the VS Code direnv extension, used to load the environment.
       ];
 
       pkgsForSystem = system:

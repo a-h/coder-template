@@ -113,8 +113,13 @@ resource "coder_agent" "main" {
     echo "Restoring home directory contents..."
     rsync --archive --omit-dir-times --no-perms --no-owner --no-group --ignore-errors /home/coder-home/ /home/coder/
 
-    echo "Starting code-server..."
+    echo "Installing extensions..."
     # code-server is installed in the Docker container by the Nix flake.
+    code-server \
+      --install-extension /vsix/direnv.vsix \
+      --install-extension /vsix/Go.vsix
+
+    echo "Starting code-server..."
     code-server --auth none --port 13337 >/tmp/code-server.log 2>&1 &
 
     echo "Startup script complete."
@@ -287,7 +292,7 @@ resource "kubernetes_deployment" "main" {
 
         container {
           name              = "dev"
-          image             = "ghcr.io/a-h/coder-template:0.0.5"
+          image             = "ghcr.io/a-h/coder-template:0.0.7"
           #TODO: Put this back to always at deployment.
           image_pull_policy = "IfNotPresent"
           command           = ["/bin/bash", "-c", coder_agent.main.init_script]
