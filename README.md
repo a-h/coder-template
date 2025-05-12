@@ -1,6 +1,13 @@
 ## Tasks
 
-### docker-image-build
+### coder-docker-image-build
+
+```bash
+export VERSION=`version get`
+docker build -t "ghcr.io/a-h/coder:$VERSION" .
+```
+
+### template-docker-image-build
 
 ```bash
 export VERSION=`version get`
