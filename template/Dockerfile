@@ -22,10 +22,10 @@ RUN mkdir -p /home/coder/.config/nix \
     && echo "experimental-features = nix-command flakes" >> /home/coder/.config/nix/nix.conf
 
 # Copy the ./tools Nix configuration into the container.
-COPY --chown=coder:coder ./tools /home/coder/tools
+COPY --chown=coder:coder . /home/coder/template
 
 # Install the tools into the default profile.
-RUN cd /home/coder/tools && nix profile install .#default
+RUN cd /home/coder/template && nix profile install .#default
 
 # Backup the contents of the default profile into another directory.
 RUN sudo cp -r /home/coder /home/coder-home \

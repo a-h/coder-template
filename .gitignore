@@ -3,4 +3,4 @@
 result
 result.*
 template.tar
-vsix/*.vsix
+template/vsix/*.vsix

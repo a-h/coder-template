@@ -4,7 +4,7 @@
 
 ```bash
 export VERSION=`version get`
-docker build -t "ghcr.io/a-h/coder-template:$VERSION" .
+docker build -t "ghcr.io/a-h/coder-template:$VERSION" ./template
 ```
 
 ### docker-run
@@ -30,6 +30,8 @@ git archive --format=tar --output=template.tar HEAD
 ```
 
 ### extensions-download
+
+Dir: ./tools
 
 ```bash
 # Setup
