@@ -355,3 +355,15 @@ resource "kubernetes_deployment" "main" {
   }
 }
 
+module "jupyter-notebook" {
+  source   = "registry.coder.com/modules/jupyter-notebook/coder"
+  version  = "1.0.19"
+  agent_id = coder_agent.main.id
+}
+
+module "jupyterlab" {
+  count    = data.coder_workspace.me.start_count
+  source   = "registry.coder.com/coder/jupyterlab/coder"
+  version  = "1.0.31"
+  agent_id = coder_agent.main.id
+}

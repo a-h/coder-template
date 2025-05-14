@@ -36,3 +36,6 @@ USER root
 RUN mkdir -p /vsix
 COPY --chown=coder:coder ./vsix /vsix
 USER coder
+
+# Update the PATH to include binaries added by coder during init.
+ENV PATH="/home/coder/.local/bin:${PATH}"
